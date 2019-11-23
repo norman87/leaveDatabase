@@ -7,39 +7,39 @@ const bcrypt = require("bcrypt");
 //routes
 //admin - dashboard
 admin.get("/admin/", (req, res) => {
-  if (req.session.currentUser) {
-    Employee.find({ isAdmin: false }, (err, allEmployees) => {
-      Leave.find()
-        .populate("employeeId")
-        .exec(function(err, foundLeave) {
-          if (err) return handleError(err);
-          Leave.aggregate(
-            [
-              {
-                $match: { approvalStatus: "Approved" }
-              },
-              {
-                $group: {
-                  // employeeId: employeeId
-                  _id: { employeeId: "$employeeId" },
-                  numberOfDays: { $sum: "$numberOfDays" }
-                }
+  // if (req.session.currentUser) {
+  Employee.find({ isAdmin: false }, (err, allEmployees) => {
+    Leave.find()
+      .populate("employeeId")
+      .exec(function(err, foundLeave) {
+        if (err) return handleError(err);
+        Leave.aggregate(
+          [
+            {
+              $match: { approvalStatus: "Approved" }
+            },
+            {
+              $group: {
+                // employeeId: employeeId
+                _id: { employeeId: "$employeeId" },
+                numberOfDays: { $sum: "$numberOfDays" }
               }
-            ],
-            (groupErr, leaveTaken) => {
-              console.log("HEREEEEEE: ", leaveTaken);
-              res.render("./admin/index.ejs", {
-                employees: allEmployees,
-                leave: foundLeave,
-                leaveTaken: leaveTaken
-              });
             }
-          );
-        });
-    });
-  } else {
-    res.redirect("/sessions/new");
-  }
+          ],
+          (groupErr, leaveTaken) => {
+            console.log("HEREEEEEE: ", leaveTaken);
+            res.render("./admin/index.ejs", {
+              employees: allEmployees,
+              leave: foundLeave,
+              leaveTaken: leaveTaken
+            });
+          }
+        );
+      });
+  });
+  // } else {
+  // res.redirect("/sessions/new");
+  // }
 });
 
 //admin - add new employee form
