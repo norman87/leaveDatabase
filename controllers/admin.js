@@ -4,7 +4,12 @@ const Employee = require("../models/employees.js");
 const Leave = require("../models/leave.js");
 const bcrypt = require("bcrypt");
 
-//routes
+//route to login landing page
+
+admin.get("/", (req, res) => {
+  res.redirect("/sessions/new");
+});
+
 //admin - dashboard
 admin.get("/admin/", (req, res) => {
   if (req.session.currentUser) {
