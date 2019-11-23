@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <% include ../partials/head.ejs%>
+  </head>
+  <body>
+    <h1>Apply for Leave</h1>
+    <h2>Welcome <%=employee.firstName%> <%=employee.lastName%>!</h2>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarText"
+        aria-controls="navbarText"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/user/<%=employee._id%>"
+              >User Dashboard</a
+            >
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/user/<%=employee._id%>/new"
+              >Apply for Leave<span class="sr-only">(current)</span></a
+            >
+          </li>
+        </ul>
+        <span class="navbar-text">
+          <form action="/sessions?_method=DELETE" method="POST">
+            <button type="submit" class="btn btn-light">LOGOUT</button>
+          </form>
+        </span>
+      </div>
+    </nav>
+    <form action="/user/<%=employee._id%>" id="newLeaveForm" method="POST">
+      <div class="form-group">
+        <label for="startDate">Start Date</label>
+        <input
+          type="date"
+          class="form-control"
+          id="startDate"
+          placeholder="Start Date"
+          name="startDate"
+        />
+        <label for="startDate">End Date</label>
+        <input
+          type="date"
+          class="form-control"
+          id="endDate"
+          placeholder="End Date"
+          name="endDate"
+        />
+        <label for="numberOfDays">Number of Days</label>
+        <input
+          type="number"
+          class="form-control"
+          id="numberOfDays"
+          placeholder="Number of Days"
+          name="numberOfDays"
+        />
+        <label for="reason">Reason</label>
+        <input
+          type="text"
+          class="form-control"
+          id="reason"
+          placeholder="Reason"
+          name="reason"
+        />
+        <input type="hidden" name="approvalStatus" value="Pending Approval" />
+        <input type="hidden" name="employeeId" value="<%=employee._id%>" />
+      </div>
+      <button type="submit" class="btn btn-danger">Submit</button>
+    </form>
+
+    <!-- <form action="/user/<%=employee._id%>" method="POST">
+      Start Date:
+      <input type="date" name="startDate" /><br />
+      End Date:
+      <input type="date" name="endDate" /><br />
+      Number of Days: <input type="number" name="numberOfDays" /><br />
+      Reason: <input type="text" name="reason" /><br />
+      <input type="hidden" name="employeeId" value="<%=employee._id%>" />
+      <a href="/user/<%=employee._id%>">Return to User Dashboard</a><br />
+      <input type="hidden" name="approvalStatus" value="Pending Approval" />
+      <input type="submit" value="Apply for leave" />
+    </form> -->
+  </body>
+</html>

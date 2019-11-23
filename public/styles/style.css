@@ -1,0 +1,17 @@
+html,
+body {
+  padding: 10px;
+}
+
+h1,
+h2 {
+  padding: 10px;
+}
+
+#newEmployeeForm,
+#newLeaveForm,
+#showLeaveForm,
+#showEmployeeDetails,
+#editEmployeeForm {
+  margin: 30px;
+}

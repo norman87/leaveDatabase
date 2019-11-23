@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <% include ../partials/head.ejs%>
+  </head>
+  <body>
+    <h1>User Dashboard</h1>
+    <h2>Welcome <%=employee.firstName%> <%=employee.lastName%>!</h2>
+    
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="/admin">Main Dashboard<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/user/<%=employee._id%>/new">Apply for Leave</a>
+            </li>
+          </ul>
+            <span class="navbar-text">
+                <form action="/sessions?_method=DELETE" method="POST">
+                  <button type="submit" class="btn btn-light">LOGOUT</button>
+                </form>
+            </span>
+        </div>
+      </nav>
+
+    <h2>My Leave Overview</h2>
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+              <th scope="col">Leave Balance</th>
+              <th scope="col">Leave Taken</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+                <%let totalLeaveTaken = 0;%>
+                <%for (i=0; i<leave.length; i++) {%>
+                  <%if (leave[i].approvalStatus === "Approved") {%>
+                    <%totalLeaveTaken += leave[i].numberOfDays%>
+                  <%}%>
+                <%}%>
+                <td><%=employee.leaveBalance - totalLeaveTaken%></td>
+                <td><%=totalLeaveTaken%></td>
+            </tr>
+          </tbody>
+    </table>  
+  <h2>Leave Application History</h2>
+  <table class="table">
+      <thead class="thead-dark">
+          <tr>
+            <th scope="col">No.</th>
+            <th scope="col">Start Date</th>
+            <th scope="col">End Date</th>
+            <th scope="col">Application Date</th>
+            <th scope="col">Number of Days</th>
+            <th scope="col">Approval Status</th>
+            <th scope="col"></th>
+          </tr>
+      </thead>
+      <tbody>
+        <%for (i=0; i<leave.length; i++) {%>
+          <tr>
+              <td><%=i+1%></td>
+              <td><%=(leave[i].startDate).getDate() + '-' + ((leave[i].startDate).getMonth() + 1) + '-' + (leave[i].startDate).getFullYear()%></td>
+              <td><%=(leave[i].endDate).getDate() + '-' + ((leave[i].endDate).getMonth() + 1 )+ '-' + (leave[i].endDate).getFullYear()%></td>
+              <td><%=(leave[i].created_at).getDate() + '-' + ((leave[i].created_at).getMonth() + 1) + '-' + (leave[i].created_at).getFullYear()%></td>
+              <td><%=leave[i].numberOfDays%></td>
+              <td><%=leave[i].approvalStatus%></td>
+              <td>
+                  <form action="/user/leave/<%=leave[i]._id%>?_method=DELETE" method="POST">
+                    <button type="submit" class="btn btn-danger">DELETE</button>
+                </form>
+              </td>
+          </tr>        
+        <%}%>
+      </tbody>
+  </table>
+  <!-- <form action="/sessions?_method=DELETE" method="POST">
+    <input type="submit" value="Logout"/>
+  </form> -->
+  </body>
+</html>

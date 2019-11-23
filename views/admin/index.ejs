@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <% include ../partials/head.ejs%>
+  </head>
+  <body>
+    <h1>Admin Dashboard</h1>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="/admin">Main Dashboard<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/new">Add New Employee</a>
+            </li>
+          </ul>
+            <span class="navbar-text">
+                <form action="/sessions?_method=DELETE" method="POST">
+                  <button type="submit" class="btn btn-light">LOGOUT</button>
+                </form>
+            </span>
+        </div>
+      </nav>
+
+    <h2>List of Employees</h2>
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+              <th scope="col">No.</th>
+              <th scope="col">First Name</th>
+              <th scope="col">Last Name</th>
+              <th scope="col">Leave Balance</th>
+              <th scope="col">No. of days Taken</th>
+              <th scope="col"></th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <%for (let i=0; i<employees.length; i++) {%>
+                <tr>
+                    <td><%=i+1%></td>
+                    <td><%=employees[i].firstName%></td>
+                    <td><%=employees[i].lastName%></td>
+                    <%for (let j=0; j<leaveTaken.length; j++) {%>
+                        <%if (String(employees[i]._id) == String(leaveTaken[j]._id.employeeId)) {%>
+                          <td><%=employees[i].leaveBalance - leaveTaken[j].numberOfDays%></td>
+                          <td><%=leaveTaken[j].numberOfDays%></td>
+                        <%}%>
+                    <%}%>
+
+
+                      <!-- still cannot work -->
+                      <!-- <%for (let j=0; j<leaveTaken.length; j++) {%>
+                        <%let leaveCounter = 0%>
+                        <%if (String(employees[i]._id) == String(leaveTaken[j]._id.employeeId)) {%>
+                          <%for (let k=0; k<leaveTaken.length; k++) {%>
+                            <%if (String(employees[i]._id) == String(leaveTaken[k]._id.employeeId)) {%>
+                              <%leaveCounter += 1;%>
+                              <%console.log(employees[i].firstName)%>
+                            <%}%>
+                          <%}%>
+                          <%console.log(leaveCounter)%>
+                          <%if (leaveCounter === 0) {%>
+                            <td>0</td>
+                            <td>0</td>
+                          <%} else {%>
+                            <td><%=employees[i].leaveBalance - leaveTaken[j].numberOfDays%></td>
+                            <td><%=leaveTaken[j].numberOfDays%></td>
+                          <%}%>
+                        <%}%>
+                      <%}%> -->
+                    <td>
+                        <form action="/admin/<%=employees[i]._id%>">
+                            <button type="submit" class="btn btn-danger">VIEW DETAILS</button>
+                        </form>
+                    </td>
+                </tr>        
+            <%}%>
+        </tbody>
+    </table>
+    <h2>Leave Application Overview</h2>
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+              <th scope="col">No.</th>
+              <th scope="col">First Name</th>
+              <th scope="col">Last Name</th>
+              <th scope="col">Start Date</th>
+              <th scope="col">End Date</th>
+              <th scope="col">Number of Days</th>
+              <th scope="col">Approval Status</th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+          <%for (i=0; i<leave.length; i++) {%>
+            <tr>
+                <td><%=i+1%></td>
+                <td><%=leave[i].employeeId.firstName%></td>
+                <td><%=leave[i].employeeId.lastName%></td>
+                <td><%=(leave[i].startDate).getDate() + '-' + ((leave[i].startDate).getMonth() + 1) + '-' + (leave[i].startDate).getFullYear()%></td>
+                <td><%=(leave[i].endDate).getDate() + '-' + ((leave[i].endDate).getMonth() + 1) + '-' + (leave[i].endDate).getFullYear()%></td>
+                <td><%=leave[i].numberOfDays%></td>
+                <td><%=leave[i].approvalStatus%></td>
+                <td>
+                    <form action="/admin/<%=leave[i]._id%>/leave">
+                      <button type="submit" class="btn btn-danger">VIEW DETAILS</button>
+                    </form>
+                  </td>
+                <td>
+                  <form action="/admin/approve/<%=leave[i]._id%>?_method=PUT" method="POST">
+                    <button type="submit" class="btn btn-danger">APPROVE</button>
+                  </form>
+                </td>
+                <td>
+                    <form action="/admin/reject/<%=leave[i]._id%>?_method=PUT" method="POST">
+                      <button type="submit" class="btn btn-danger">REJECT</button>
+                    </form>
+                </td>
+            </tr>        
+          <%}%>
+        </tbody>
+    </table>
+
+  </body>
+</html>
